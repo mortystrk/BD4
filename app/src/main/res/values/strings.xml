@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BD4</string>
+    <string name="dialog_content">Создается файл "Base_Lab.txt"</string>
+    <string name="understood">Понял!</string>
+</resources>
