@@ -7,10 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class FileContent extends AppCompatActivity {
 
@@ -18,18 +21,24 @@ public class FileContent extends AppCompatActivity {
     TextView info;
     File file;
 
+
     private void ReadText(){
-        FileInputStream fin = null;
-        try{
-            fin = openFileInput(fileName);
-            byte[] bytes = new byte[fin.available()];
-            fin.read(bytes);
-            String text = new String(bytes);
-            info.setText(text);
+        StringBuilder text = new StringBuilder();
+        try {
+            FileInputStream stream = null;
+            StringBuilder sb = new StringBuilder();
+            String line;
+            stream = openFileInput(fileName);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            stream.close();
+            info.setText(sb.toString());
         } catch (FileNotFoundException e) {
-            Log.d("Log_04", "Файл " + fileName + " не найден");
+            e.printStackTrace();
         } catch (IOException e) {
-            Log.d("Log_04", "Чтение не удалось");
+            e.printStackTrace();
         }
     }
 
@@ -46,6 +55,7 @@ public class FileContent extends AppCompatActivity {
 
     public void onReturn(View view) {
         Intent intent = new Intent(this, MainActivity.class);
+        file.delete();
         startActivity(intent);
     }
 }

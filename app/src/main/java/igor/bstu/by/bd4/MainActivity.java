@@ -1,6 +1,7 @@
 package igor.bstu.by.bd4;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +12,10 @@ import android.widget.EditText;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private File file;
     private BufferedWriter bufWritter;
     EditText surname, name;
+    FileOutputStream outputStream;
 
     public String getFileName() {
         return fileName;
@@ -71,8 +75,13 @@ public class MainActivity extends AppCompatActivity {
     private void WriteLine(String surname, String name){
         String str = surname + "; " + name + ";" + "\r\n";
         try{
-            bufWritter.write(str);
-            Log.d("Log_04", "Данные записаны");
+            //outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
+           // outputStream.write(str.getBytes());
+           // outputStream.close();
+            RandomAccessFile out = new RandomAccessFile(file, "rw");
+            out.seek(file.length());
+            out.writeChars(str + "\r\n");
+            out.close();
         } catch (IOException e) {
             Log.d("Log_04", "Данные не записаны");
         }
