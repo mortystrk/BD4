@@ -23,12 +23,10 @@ public class FileContent extends AppCompatActivity {
 
 
     private void ReadText(){
-        StringBuilder text = new StringBuilder();
         try {
-            FileInputStream stream = null;
+            FileInputStream stream = openFileInput(fileName);;
             StringBuilder sb = new StringBuilder();
             String line;
-            stream = openFileInput(fileName);
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
@@ -55,7 +53,6 @@ public class FileContent extends AppCompatActivity {
 
     public void onReturn(View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        file.delete();
         startActivity(intent);
     }
 }

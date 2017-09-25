@@ -1,7 +1,6 @@
 package igor.bstu.by.bd4;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,28 +8,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String fileName = "Base_Lab.txt";
     private File file;
-    private BufferedWriter bufWritter;
     EditText surname, name;
-    FileOutputStream outputStream;
-
-    public String getFileName() {
-        return fileName;
-    }
 
     private boolean ExistBase(String fileName){
-        boolean flag = false;
+        boolean flag;
         File file = new File(super.getFilesDir(), fileName);
         if(flag = file.exists()){
             Log.d("Log_04", "Файл " + fileName + " существует");
@@ -41,10 +30,10 @@ public class MainActivity extends AppCompatActivity {
         return flag;
     }
 
-    private AlertDialog CreateDialog() {
+    private AlertDialog CreateDialog(int message, int textOnPositiveButton) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.dialog_content)
-                .setPositiveButton(R.string.understood, new DialogInterface.OnClickListener() {
+        builder.setMessage(message)
+                .setPositiveButton(textOnPositiveButton, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Log.d("Log_04", "Создание файла Base_lab.txt");
@@ -62,26 +51,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void CreateWritter(){
-        try{
-            FileWriter fw = new FileWriter(file, true);
-            bufWritter = new BufferedWriter(fw);
-            WriteLine(surname.getText().toString(), name.getText().toString());
-        } catch (IOException e) {
-            Log.d("Log_04", "Файл " + fileName + " не открыт " + e.getMessage());
-        }
-    }
-
     private void WriteLine(String surname, String name){
         String str = surname + "; " + name + ";" + "\r\n";
         try{
-            //outputStream = openFileOutput(fileName, Context.MODE_PRIVATE);
-           // outputStream.write(str.getBytes());
-           // outputStream.close();
-            RandomAccessFile out = new RandomAccessFile(file, "rw");
-            out.seek(file.length());
-            out.writeChars(str + "\r\n");
-            out.close();
+            FileWriter fw = new FileWriter(file, true);
+            fw.write(str);
+            fw.flush();
         } catch (IOException e) {
             Log.d("Log_04", "Данные не записаны");
         }
@@ -93,9 +68,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         file = new File(super.getFilesDir(), fileName);
-
         if(!ExistBase(fileName)){
-            AlertDialog dialog = CreateDialog();
+            AlertDialog dialog = CreateDialog(R.string.dialog_content, R.string.understood);
             dialog.show();
             CreateFile();
         }
@@ -105,7 +79,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSetInfo(View v){
-        CreateWritter();
+        if(!ExistBase(fileName)){
+            AlertDialog dialog = CreateDialog(R.string.dialog_content, R.string.understood);
+            dialog.show();
+            CreateFile();
+        }
+        WriteLine(surname.getText().toString(), name.getText().toString());
         surname.setText("");
         name.setText("");
     }
@@ -113,5 +92,12 @@ public class MainActivity extends AppCompatActivity {
     public void onGetInfo(View v){
         Intent intent = new Intent(this, FileContent.class);
         startActivity(intent);
+    }
+
+    public void onDeleteFile(View view) {
+        file.delete();
+        AlertDialog dialog = CreateDialog(R.string.delete_file, R.string.understood);
+        dialog.show();
+
     }
 }
