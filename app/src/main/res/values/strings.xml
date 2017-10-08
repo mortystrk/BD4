@@ -3,4 +3,5 @@
     <string name="dialog_content">Создается файл "Base_Lab.txt"</string>
     <string name="understood">Понял!</string>
     <string name="delete_file">Файл удален!</string>
+    <string name="file_not_found">Файл не найден!</string>
 </resources>

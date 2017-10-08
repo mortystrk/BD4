@@ -24,7 +24,7 @@ public class FileContent extends AppCompatActivity {
 
     private void ReadText(){
         try {
-            FileInputStream stream = openFileInput(fileName);;
+            FileInputStream stream = openFileInput(fileName);
             StringBuilder sb = new StringBuilder();
             String line;
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));

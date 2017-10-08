@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void WriteLine(String surname, String name){
-        String str = surname + "; " + name + ";" + "\r\n";
+        String str = surname + " " + name + ";" + "\r\n";
         try{
             FileWriter fw = new FileWriter(file, true);
             fw.write(str);
@@ -90,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGetInfo(View v){
+        if(!ExistBase(fileName)){
+            AlertDialog dialog = CreateDialog(R.string.file_not_found, R.string.understood);
+            dialog.show();
+            return;
+        }
         Intent intent = new Intent(this, FileContent.class);
         startActivity(intent);
     }
